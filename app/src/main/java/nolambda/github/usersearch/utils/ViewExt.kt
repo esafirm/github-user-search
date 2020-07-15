@@ -30,7 +30,6 @@ fun EditText.onTextChange(debounceTime: Long = 0, block: (String) -> Unit) {
     val useDebounce = debounceTime > 0
     val handler = Handler(Looper.getMainLooper())
 
-    tag = true
     addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
         }
@@ -39,18 +38,15 @@ fun EditText.onTextChange(debounceTime: Long = 0, block: (String) -> Unit) {
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            val isListenTextChange = tag == true
-            if (isListenTextChange) {
-                if (useDebounce) {
-                    handler.removeCallbacksAndMessages(null)
-                    handler.postDelayed({
-                        block(s.toString())
-                    }, debounceTime)
-                } else {
+            if (useDebounce) {
+                handler.removeCallbacksAndMessages(null)
+                handler.postDelayed({
                     block(s.toString())
-                }
-
+                }, debounceTime)
+            } else {
+                block(s.toString())
             }
+
         }
     })
 }
